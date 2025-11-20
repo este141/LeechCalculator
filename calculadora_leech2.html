@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Calculadora de Leech - Ragnarok</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #020617;
+      color: #e5e7eb;
+      margin: 0;
+      padding: 20px;
+    }
+    h1, h2, h3 {
+      color: #facc15;
+    }
+    .card {
+      background: #0f172a;
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.6);
+    }
+    label {
+      display: block;
+      margin-top: 8px;
+      margin-bottom: 4px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    input {
+      width: 100%;
+      padding: 7px 9px;
+      border-radius: 8px;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 14px;
+    }
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .row > div {
+      flex: 1;
+      min-width: 120px;
+    }
+    button {
+      margin-top: 12px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      background: #facc15;
+      color: #111827;
+    }
+    button:hover {
+      background: #eab308;
+    }
+    .small-btn {
+      padding: 6px 10px;
+      font-size: 12px;
+      margin-right: 6px;
+      margin-top: 6px;
+    }
+    .results p {
+      margin: 4px 0;
+      font-size: 14px;
+    }
+    code {
+      background: #020617;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+    th, td {
+      border: 1px solid #1f2937;
+      padding: 5px 6px;
+      text-align: left;
+    }
+    th {
+      background: #020617;
+    }
+    .radio-group {
+      display: flex;
+      gap: 16px;
+      margin-top: 4px;
+      font-size: 14px;
+    }
+    .radio-group label {
+      font-weight: normal;
+      margin-top: 0;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1f2937;
+      margin: 16px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Calculadora de Leech - EPIC Ragnarok</h1>
+
+  <!-- CONFIGURAÇÃO DE TAXA / PREÇO -->
+  <div class="card">
+    <h2>1) Configuração da taxa de EXP e preço (serviço de referência)</h2>
+    <p style="font-size:13px;">
+      Aqui você define um serviço base que você já conhece (por exemplo: <b>84→99 não-trans</b> em
+      <b>2h15</b> por <b>R$ 50</b>). A calculadora vai usar isso para achar:
+      <b>EXP/hora</b> e <b>R$/hora</b>, e todo o resto das contas vai seguir essa taxa.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Preset</th>
+          <th>Classe</th>
+          <th>Faixa</th>
+          <th>EXP Total</th>
+          <th>Ação</th>
+        </tr>
+      </thead>
+<tbody>
+  <tr>
+    <td>Leech Thor</td>
+    <td> Arroz</td>
+    <td>84 → 99</td>
+    <td><code>200.000.000 EXP HORA</code></td>
+    <td>
+      <button class="small-btn" onclick="setRefFromPreset('non84_99')">
+        Usar como referência (tempo/preço abaixo)
+      </button>
+    </td>
+  </tr>
+  <tr>
+    <td>Leech Thor</td>
+    <td>Lelouch</td>
+    <td>84 → 99</td>
+    <td><code>200.000.000 EXP HORA</code></td>
+    <td>
+      <button class="small-btn" onclick="setRefFromPreset('non84_99')">
+        Usar como referência (tempo/preço abaixo)
+      </button>
+    </td>
+  </tr>
+
+  <tr>
+    <td>Leech Anolians</td>
+    <td>Cotoco</td>
+    <td>1 → 84</td>
+    <td><code>25.000.000 EXP HORA</code></td>
+    <td>
+      <button class="small-btn" onclick="setRefFromPreset('non1_84')">
+        Usar como referência (tempo/preço abaixo)
+      </button>
+    </td>
+  </tr>
+
+  <tr>
+    <td>Leech Juperus</td>
+    <td>Cotoco</td>
+    <td>60 → 84</td>
+    <td><code>30.000.000 EXP HORA</code></td>
+    <td>
+      <button class="small-btn" onclick="setRefFromPreset('trans1_84')">
+        Usar como referência (tempo/preço abaixo)
+      </button>
+    </td>
+  </tr>
+</tbody>
+
+    </table>
+
+    <label for="refExp">EXP do serviço de referência</label>
+    <input id="refExp" type="text" placeholder="Ex: 358164738" />
+
+    <div class="row">
+      <div>
+        <label for="refHours">Tempo do serviço de referência - Horas</label>
+        <input id="refHours" type="text" placeholder="Ex: 2" />
+      </div>
+      <div>
+        <label for="refMinutes">Tempo do serviço de referência - Minutos</label>
+        <input id="refMinutes" type="text" placeholder="Ex: 15" />
+      </div>
+    </div>
+
+    <label for="refPrice">Preço do serviço de referência (R$)</label>
+    <input id="refPrice" type="text" placeholder="Ex: 50" />
+
+    <div id="refInfo" class="results" style="margin-top:10px;font-size:13px;color:#a5b4fc;"></div>
+  </div>
+
+  <!-- CALCULADORA DE NIVEL POR TEMPO -->
+  <div class="card">
+    <h2>2) Calculadora de nível por tempo (1 → 99)</h2>
+    <p style="font-size:13px;">
+      Informe o <b>nível atual</b> do cliente, o <b>tempo de leech</b> e se é <b>transclasse</b ou não.
+      A calculadora usa a taxa configurada acima para estimar até que nível ele chega e quanto você deve cobrar.
+    </p>
+
+    <div class="radio-group">
+      <label><input type="radio" name="classType1" value="non" checked> Não-transclasse</label>
+      <label><input type="radio" name="classType1" value="trans"> Transclasse</label>
+    </div>
+
+    <div class="row">
+      <div>
+        <label for="startLevel">Nível atual do cliente</label>
+        <input id="startLevel" type="number" min="1" max="99" placeholder="Ex: 70" />
+      </div>
+      <div>
+        <label for="leechHours">Tempo de leech - Horas</label>
+        <input id="leechHours" type="text" placeholder="Ex: 0" />
+      </div>
+      <div>
+        <label for="leechMinutes">Tempo de leech - Minutos</label>
+        <input id="leechMinutes" type="text" placeholder="Ex: 30" />
+      </div>
+    </div>
+
+    <button onclick="calculateLevelByTime()">Calcular nível e valor</button>
+
+    <div class="results" id="levelResults"></div>
+  </div>
+
+  <!-- CALCULADORA ESPECIAL 84–99 -->
+  <div class="card">
+    <h2>3) Calculadora especial 84 → 99</h2>
+    <p style="font-size:13px;">
+      Aqui é uma calculadora rápida só para o pacote completo <b>84→99</b>. Informe se é transclasse
+      ou não, e ela usa a taxa configurada na seção 1 para estimar <b>tempo total</b> e <b>preço sugerido</b>.
+    </p>
+
+    <div class="radio-group">
+      <label><input type="radio" name="classType2" value="non" checked> Não-transclasse</label>
+      <label><input type="radio" name="classType2" value="trans"> Transclasse</label>
+    </div>
+
+    <button onclick="calculate84to99()">Calcular 84 → 99</button>
+
+    <div class="results" id="fullRangeResults"></div>
+  </div>
+
+  <script>
+    // ======= TABELAS DE EXP (YAML QUE VOCÊ MANDOU) =======
+
+    // Índice 1 = Level 1, etc. Índice 0 fica como 0 só pra alinhar.
+    const expNonTrans = [
+      0,
+      9,16,25,36,77,112,153,200,253,320,
+      385,490,585,700,830,970,1120,1260,1420,1620,
+      1860,1990,2240,2504,2950,3426,3934,4474,6889,7995,
+      9174,10425,11748,13967,15775,17678,19677,21773,30543,34212,
+      38065,42102,46323,53026,58419,64041,69892,75973,102468,115254,
+      128692,142784,157528,178184,196300,215198,234879,255341,330188,365914,
+      403224,442116,482590,536948,585191,635278,687211,740988,925400,1473746,
+      1594058,1718928,1848355,1982340,2230113,2386162,2547417,2713878,3206160,3681024,
+      4022472,4377024,4744680,5125440,5767272,6204000,6655464,7121664,7602600,9738720,
+      11649960,13643520,18339300,23836800,35658000,48687000,58135000,99999998,99999999
+    ];
+
+    const expTrans = [
+      0,
+      10,18,28,40,85,123,168,220,278,400,
+      481,613,731,875,1038,1213,1400,1575,1775,2268,
+      2604,2786,3136,3506,4130,4796,5508,6264,9645,12392,
+      14220,16159,18209,21649,24451,27401,30499,33748,47342,58160,
+      64711,71573,78749,90144,99312,108870,118816,129154,174196,213220,
+      238080,264150,291427,329640,363155,398116,434526,472381,610848,731828,
+      806448,884232,965180,1073896,1170382,1270556,1374422,1481976,1850800,3389616,
+      3666333,3953534,4251217,4559382,5129260,5488173,5859059,6241919,7374168,9570662,
+      10458427,11380262,12336168,13326144,14994907,16130400,17304206,18516326,19766760,29216160,
+      34949880,40930560,55017900,71510400,106974000,146061000,174405000,343210000,99999999
+    ];
+
+    // Totais 84→99 pra cada classe (somando 84 a 98)
+    const EXP_NON_84_99 = 358164738;
+    const EXP_TRANS_84_99 = 1102313643;
+
+    // ======= FUNÇÕES AUXILIARES =======
+
+    function parseNumber(str) {
+      if (!str) return NaN;
+      // tira separador de milhar (.) e aceita vírgula como decimal
+      str = str.toString().trim().replace(/\./g, '').replace(',', '.');
+      return parseFloat(str);
+    }
+
+    function formatNumber(n) {
+      return n.toLocaleString('pt-BR');
+    }
+
+	function setRefFromPreset(preset) {
+	if (preset === 'non84_99') {
+		// Leech Thor 84–99 não-trans
+		document.getElementById('refExp').value = 200000000;
+		document.getElementById('refHours').value = '1';
+		document.getElementById('refMinutes').value = '0';
+		document.getElementById('refPrice').value = '25';
+	}
+	if (preset === 'non84_99') {
+		// Leech Thor 84–99 trans
+		document.getElementById('refExp').value = 200000000;
+		document.getElementById('refHours').value = '1';
+		document.getElementById('refMinutes').value = '0';
+		document.getElementById('refPrice').value = '30';
+	}
+	
+	if (preset === 'non1_84') {
+		// Leech 1–84 não-trans (ajusta tempo/preço como você quiser)
+		document.getElementById('refExp').value = 25000000; // 1–84 não-trans
+		document.getElementById('refHours').value = '1';    // exemplo
+		document.getElementById('refMinutes').value = '0';  // exemplo
+		document.getElementById('refPrice').value = '25';   // exemplo
+	}
+	
+	if (preset === 'trans1_84') {
+		// Leech 1–84 transclasse (ajusta tempo/preço como você quiser)
+		document.getElementById('refExp').value = 30000000; // 1–84 trans
+		document.getElementById('refHours').value = '1';     // exemplo
+		document.getElementById('refMinutes').value = '0';  // exemplo
+		document.getElementById('refPrice').value = '20';   // exemplo
+	}
+	
+	// Atualiza o texto da taxa
+	updateRefInfo();
+	}
+
+
+    function getRefData() {
+      const refExp = parseNumber(document.getElementById('refExp').value);
+      const refHours = parseNumber(document.getElementById('refHours').value);
+      const refMinutes = parseNumber(document.getElementById('refMinutes').value);
+      const refPrice = parseNumber(document.getElementById('refPrice').value);
+
+      if (isNaN(refExp) || isNaN(refHours) || isNaN(refMinutes) || isNaN(refPrice)) {
+        return { ok: false };
+      }
+
+      const totalRefHours = refHours + (refMinutes / 60);
+      if (totalRefHours <= 0) {
+        return { ok: false };
+      }
+
+      const expPerHour = refExp / totalRefHours;
+      const pricePerHour = refPrice / totalRefHours;
+
+      return {
+        ok: true,
+        refExp,
+        totalRefHours,
+        refPrice,
+        expPerHour,
+        pricePerHour
+      };
+    }
+
+    function updateRefInfo() {
+      const infoDiv = document.getElementById('refInfo');
+      const data = getRefData();
+      if (!data.ok) {
+        infoDiv.innerHTML = '<p>Preencha EXP, tempo e preço para definir a taxa base.</p>';
+        return;
+      }
+      infoDiv.innerHTML = `
+        <p><b>Taxa definida:</b></p>
+        <p>• EXP/hora: <b>${formatNumber(data.expPerHour.toFixed(2))}</b></p>
+        <p>• R$/hora: <b>R$ ${data.pricePerHour.toFixed(2)}</b></p>
+      `;
+    }
+
+    document.getElementById('refExp').addEventListener('input', updateRefInfo);
+    document.getElementById('refHours').addEventListener('input', updateRefInfo);
+    document.getElementById('refMinutes').addEventListener('input', updateRefInfo);
+    document.getElementById('refPrice').addEventListener('input', updateRefInfo);
+
+    // ======= SIMULAÇÃO DE UP POR EXP GANHA =======
+
+    function simulateLevel(expTable, startLevel, expGain) {
+      let level = startLevel;
+      let expInLevel = 0; // começando com 0% no nível atual
+
+      while (expGain > 0 && level < 99) {
+        const needed = expTable[level] - expInLevel;
+
+        if (expGain >= needed) {
+          // Sobe de nível
+          expGain -= needed;
+          level += 1;
+          expInLevel = 0;
+        } else {
+          // Fica no mesmo nível, só aumenta a barra
+          expInLevel += expGain;
+          expGain = 0;
+        }
+      }
+
+      let percent = 0;
+      if (level < 99) {
+        percent = (expInLevel / expTable[level]) * 100;
+      }
+
+      return {
+        level,
+        percent,
+        expInLevel
+      };
+    }
+
+    // ======= CALCULADORA 2: NIVEL POR TEMPO =======
+
+    function calculateLevelByTime() {
+      const refData = getRefData();
+      const resultsDiv = document.getElementById('levelResults');
+
+      if (!refData.ok) {
+        resultsDiv.innerHTML = '<p style="color:#fca5a5;">Primeiro configure o serviço de referência na seção 1.</p>';
+        return;
+      }
+
+      const classType = document.querySelector('input[name="classType1"]:checked').value;
+      const startLevel = parseInt(document.getElementById('startLevel').value, 10);
+      const leechHours = parseNumber(document.getElementById('leechHours').value);
+      const leechMinutes = parseNumber(document.getElementById('leechMinutes').value);
+
+      if (isNaN(startLevel) || startLevel < 1 || startLevel > 99) {
+        resultsDiv.innerHTML = '<p style="color:#fca5a5;">Informe um nível inicial entre 1 e 99.</p>';
+        return;
+      }
+      if (isNaN(leechHours) || isNaN(leechMinutes)) {
+        resultsDiv.innerHTML = '<p style="color:#fca5a5;">Informe o tempo de leech (horas e minutos).</p>';
+        return;
+      }
+
+      const totalHours = leechHours + (leechMinutes / 60);
+      if (totalHours <= 0) {
+        resultsDiv.innerHTML = '<p style="color:#fca5a5;">O tempo de leech deve ser maior que zero.</p>';
+        return;
+      }
+
+      // EXP ganha nesse tempo
+      const expGain = refData.expPerHour * totalHours;
+      const price = refData.pricePerHour * totalHours;
+
+      const expTable = classType === 'trans' ? expTrans : expNonTrans;
+      const sim = simulateLevel(expTable, startLevel, expGain);
+
+      resultsDiv.innerHTML = `
+        <h3>Resultado</h3>
+        <p>• EXP estimada ganha: <b>${formatNumber(Math.round(expGain))}</b></p>
+        <p>• Nível estimado final: <b>${sim.level}</b></p>
+        <p>• Barra no nível ${sim.level}: <b>${sim.percent.toFixed(1)}%</b></p>
+        <p>• Valor sugerido para esse leech: <b>R$ ${price.toFixed(2)}</b></p>
+      `;
+    }
+
+    // ======= CALCULADORA 3: 84–99 COMPLETO =======
+
+    function calculate84to99() {
+      const refData = getRefData();
+      const resultsDiv = document.getElementById('fullRangeResults');
+
+      if (!refData.ok) {
+        resultsDiv.innerHTML = '<p style="color:#fca5a5;">Primeiro configure o serviço de referência na seção 1.</p>';
+        return;
+      }
+
+      const classType = document.querySelector('input[name="classType2"]:checked').value;
+      const totalExp = classType === 'trans' ? EXP_TRANS_84_99 : EXP_NON_84_99;
+
+      const totalHours = totalExp / refData.expPerHour;
+      let h = Math.floor(totalHours);
+      let m = Math.round((totalHours - h) * 60);
+      if (m === 60) { h += 1; m = 0; }
+
+      const price = refData.pricePerHour * totalHours;
+
+      resultsDiv.innerHTML = `
+        <h3>Resultado 84 → 99 (${classType === 'trans' ? 'Transclasse' : 'Não-trans'})</h3>
+        <p>• EXP total necessária: <b>${formatNumber(totalExp)}</b></p>
+        <p>• Tempo estimado: <b>~ ${h}h ${m}min</b> (${totalHours.toFixed(2)} h)</p>
+        <p>• Valor proporcional sugerido: <b>R$ ${price.toFixed(2)}</b></p>
+      `;
+    }
+
+    // Atualiza texto inicial
+    updateRefInfo();
+  </script>
+</body>
+</html>
