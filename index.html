@@ -4,16 +4,15 @@
   <meta charset="UTF-8" />
   <title>Calculadora de Leech - Ragnarok</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #020617;
-      color: #e5e7eb;
-      margin: 0;
-      padding: 20px;
-    }
-    h1, h2, h3 {
-      color: #facc15;
-    }
+	body {
+	font-family: Arial, sans-serif;
+	/* fundo com imagem + fallback escuro */
+	background: #020617 url("https://github.com/este141/LeechCalculator/blob/main/640px-PvPbatalha.jpg?raw=true") no-repeat center center fixed;
+	background-size: cover;
+	color: #e5e7eb;
+	margin: 0;
+	padding: 20px;
+	}
     .card {
       background: #0f172a;
       border-radius: 12px;
@@ -28,7 +27,7 @@
       font-weight: bold;
       font-size: 14px;
     }
-    input {
+    input, select {
       width: 100%;
       padding: 7px 9px;
       border-radius: 8px;
@@ -44,7 +43,7 @@
     }
     .row > div {
       flex: 1;
-      min-width: 120px;
+      min-width: 150px;
     }
     button {
       margin-top: 12px;
@@ -98,6 +97,32 @@
       font-weight: normal;
       margin-top: 0;
     }
+    .checkbox-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: normal;
+      margin-top: 6px;
+    }
+    .checkbox-line input {
+      width: auto;
+    }
+    .buff-box {
+      margin-top: 8px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #1f2937;
+      background: #020617;
+    }
+    .discount-box {
+      margin-top: 10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid #1f2937;
+      background: #020617;
+      max-width: 260px;
+    }
     hr {
       border: none;
       border-top: 1px solid #1f2937;
@@ -107,10 +132,11 @@
 </head>
 <body>
   <h1>Calculadora de Leech - Cotoco</h1>
+
   <!-- Banner / imagem externa -->
   <div style="text-align:center; margin-bottom: 20px;">
     <img
-      src="https://kafraverse.net/wiki/images/b/b1/Episodebanner3.png"
+      src="https://github.com/este141/LeechCalculator/blob/main/btns_gde_regras.png?raw=true"
       alt="Banner Ragnarok"
       style="max-width: 100%; height: auto; border-radius: 12px;"
     >
@@ -120,9 +146,9 @@
   <div class="card">
     <h2>1) Configuração da taxa de EXP e preço (serviço de referência)</h2>
     <p style="font-size:13px;">
-      Aqui você define um serviço base que você já conhece (por exemplo: <b>84→99 não-trans</b> em
-      <b>2h15</b> por <b>R$ 50</b>). A calculadora vai usar isso para achar:
-      <b>EXP/hora</b> e <b>R$/hora</b>, e todo o resto das contas vai seguir essa taxa.
+      Aqui você define um serviço base que você já conhece (por exemplo: <b>Thor 84→99</b> em
+      <b>1h</b> por <b>R$ 25</b>). A calculadora acha:
+      <b>EXP/hora</b> e <b>R$/hora</b>, e usa isso para tudo.
     </p>
 
     <table>
@@ -131,77 +157,104 @@
           <th>Preset</th>
           <th>Leecher</th>
           <th>Faixa</th>
-          <th>EXP Total</th>
+          <th>EXP/h estimada</th>
           <th>Ação</th>
         </tr>
       </thead>
-<tbody>
-  <tr>
-    <td>Leech Thor</td>
-    <td> Arroz</td>
-    <td>84 → 99</td>
-    <td><code>165.000.000 EXP HORA</code></td>
-    <td>
-      <button class="small-btn" onclick="setRefFromPreset('non84_99')">
-        Usar como referência (tempo/preço abaixo)
-      </button>
-    </td>
-  </tr>
-  <tr>
-    <td>Leech Thor</td>
-    <td>Lelouch</td>
-    <td>84 → 99</td>
-    <td><code>160.000.000 EXP HORA</code></td>
-    <td>
-      <button class="small-btn" onclick="setRefFromPreset('non84_99')">
-        Usar como referência (tempo/preço abaixo)
-      </button>
-    </td>
-  </tr>
-
-  <tr>
-    <td>Leech Anolians</td>
-    <td>Cotoco</td>
-    <td>1 → 84(recomendado 1-70)</td>
-    <td><code>25.000.000 EXP HORA</code></td>
-    <td>
-      <button class="small-btn" onclick="setRefFromPreset('non1_84')">
-        Usar como referência (tempo/preço abaixo)
-      </button>
-    </td>
-  </tr>
-
-  <tr>
-    <td>Leech Lago do Abismo 4(EM BREVE)</td>
-    <td>Cotoco</td>
-    <td>69 → 99(Recomendado 69-84)</td>
-    <td><code>150.000.000 EXP HORA</code></td>
-    <td>
-      <button class="small-btn" onclick="setRefFromPreset('trans1_84')">
-        Usar como referência (tempo/preço abaixo)
-      </button>
-    </td>
-  </tr>
-</tbody>
-
+      <tbody>
+        <tr>
+          <td>Leech Thor</td>
+          <td>Arroz</td>
+          <td>84 → 99</td>
+          <td><code>86.000.000 EXP/h</code></td>
+          <td>
+            <button class="small-btn" onclick="setRefFromPreset('thor_arroz')">
+              Usar como referência
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td>Leech Thor</td>
+          <td>Lelouch</td>
+          <td>84 → 99</td>
+          <td><code>84.000.000 EXP/h</code></td>
+          <td>
+            <button class="small-btn" onclick="setRefFromPreset('thor_lelouch')">
+              Usar como referência
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td>Leech Anolians</td>
+          <td>Cotoco</td>
+          <td>1 → 84 (recomendado 1–70)</td>
+          <td><code>14.000.000 EXP/h</code></td>
+          <td>
+            <button class="small-btn" onclick="setRefFromPreset('anolians_cotoco')">
+              Usar como referência
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td>Leech Lago do Abismo 4 (EM BREVE)</td>
+          <td>Cotoco</td>
+          <td>69 → 99 (recomendado 69–84)</td>
+          <td><code>78.000.000 EXP/h</code></td>
+          <td>
+            <button class="small-btn" onclick="setRefFromPreset('lava_cotoco')">
+              Usar como referência
+            </button>
+          </td>
+        </tr>
+      </tbody>
     </table>
 
-    <label for="refExp">EXP do serviço de referência</label>
-    <input id="refExp" type="text" placeholder="Ex: 358164738" />
+    <label for="refExp">EXP do serviço de referência (total daquele serviço)</label>
+    <input id="refExp" type="text" placeholder="Ex: 165000000 (para 1h com 165M/h)" />
 
     <div class="row">
       <div>
         <label for="refHours">Tempo do serviço de referência - Horas</label>
-        <input id="refHours" type="text" placeholder="Ex: 2" />
+        <input id="refHours" type="text" placeholder="Ex: 1" />
       </div>
       <div>
         <label for="refMinutes">Tempo do serviço de referência - Minutos</label>
-        <input id="refMinutes" type="text" placeholder="Ex: 15" />
+        <input id="refMinutes" type="text" placeholder="Ex: 0" />
       </div>
     </div>
 
     <label for="refPrice">Preço do serviço de referência (R$)</label>
-    <input id="refPrice" type="text" placeholder="Ex: 50" />
+    <input id="refPrice" type="text" placeholder="Ex: 25" />
+
+    <hr>
+
+    <h3 style="font-size:14px;">Bônus de EXP ativos</h3>
+    <p style="font-size:12px; margin-top:0;">
+      Marque os itens/eventos que estão ativos. Eles aumentam a <b>EXP/hora</b>, mas não mudam o <b>R$/hora</b>.
+    </p>
+
+    <div class="buff-box">
+      <label class="checkbox-line">
+        <input type="checkbox" id="buff_manual">
+        Manual de combate (+50% EXP)
+      </label>
+      <label class="checkbox-line">
+        <input type="checkbox" id="buff_visuais">
+        Visuais de EXP (+20% EXP)
+      </label>
+      <label class="checkbox-line">
+        <input type="checkbox" id="buff_lata">
+        Lata de ração para gatos (+10% EXP)
+      </label>
+      <label class="checkbox-line">
+        <input type="checkbox" id="buff_mascar">
+        Manual de mascar (+10% EXP)
+      </label>
+      <label class="checkbox-line">
+        <input type="checkbox" id="buff_double">
+        Evento de Double EXP (x2 na EXP final)
+      </label>
+    </div>
 
     <div id="refInfo" class="results" style="margin-top:10px;font-size:13px;color:#a5b4fc;"></div>
   </div>
@@ -210,8 +263,9 @@
   <div class="card">
     <h2>2) Calculadora de nível por tempo (1 → 99)</h2>
     <p style="font-size:13px;">
-      Informe o <b>nível atual</b> do cliente, o <b>tempo de leech</b> e se é <b>transclasse</b ou não.
-      A calculadora usa a taxa configurada acima para estimar até que nível ele chega e quanto você deve cobrar.
+      Informe o <b>nível atual</b> do cliente, o <b>tempo de leech</b> e se é <b>transclasse</b> ou não.
+      A calculadora usa a taxa configurada acima (já com buffs de EXP) para estimar até que nível ele chega
+      e quanto você deve cobrar.
     </p>
 
     <div class="radio-group">
@@ -239,28 +293,93 @@
     <div class="results" id="levelResults"></div>
   </div>
 
-  <!-- CALCULADORA ESPECIAL 84–99 -->
+  <!-- CALCULADORA DE PACOTES -->
   <div class="card">
-    <h2>3) Calculadora especial 84 → 99</h2>
+    <h2>3) Calculadora de pacotes (1–84, 1–70, 1–99, 84–99 e combo)</h2>
     <p style="font-size:13px;">
-      Aqui é uma calculadora rápida só para o pacote completo <b>84→99</b>. Informe se é transclasse
-      ou não, e ela usa a taxa configurada na seção 1 para estimar <b>tempo total</b> e <b>preço sugerido</b>.
+      Aqui você monta um pacote fechado. A EXP é dividida em três faixas:
+      <b>1–69</b>, <b>69–84</b> e <b>84–99</b>, e você escolhe qual tipo de leech será usado em cada uma.
+      Thor só aparece na faixa 84–99 e Lago do Abismo só a partir do 69, respeitando as restrições de nível.
+      O combo inclui <b>1→99 não-trans + 1→99 transclasse</b>.
     </p>
 
-    <div class="radio-group">
+    <label for="packageType">Tipo de pacote</label>
+    <select id="packageType">
+      <option value="84_99">84 → 99</option>
+      <option value="1_84">1 → 84</option>
+      <option value="1_70">1 → 70</option>
+      <option value="1_99">1 → 99</option>
+      <option value="combo_1_99">Combo 1 → 99 não-trans + 1 → 99 transclasse</option>
+    </select>
+
+    <div class="row" style="margin-top:10px;">
+      <div>
+        <label for="leechRange1">Leech para 1 → 69</label>
+        <select id="leechRange1">
+          <option value="anolians">Anolians (Cotoco)</option>
+        </select>
+      </div>
+      <div>
+        <label for="leechRange2">Leech para 69 → 84</label>
+        <select id="leechRange2">
+          <option value="anolians">Anolians (Cotoco)</option>
+          <option value="lava">Lago do Abismo 4 (Cotoco)</option>
+        </select>
+      </div>
+      <div>
+        <label for="leechRange3">Leech para 84 → 99</label>
+        <select id="leechRange3">
+          <option value="thor_arroz">Thor (Arroz)</option>
+          <option value="thor_lelouch">Thor (Lelouch)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="radio-group" style="margin-top:8px;">
       <label><input type="radio" name="classType2" value="non" checked> Não-transclasse</label>
       <label><input type="radio" name="classType2" value="trans"> Transclasse</label>
     </div>
 
-    <button onclick="calculate84to99()">Calcular 84 → 99</button>
+    <div class="discount-box">
+      <label class="checkbox-line" style="margin-top:0;">
+        <input type="checkbox" id="discount20">
+        Aplicar desconto de 20% (pacotes)
+      </label>
+    </div>
+
+    <button onclick="calculatePackages()">Calcular pacote</button>
 
     <div class="results" id="fullRangeResults"></div>
   </div>
 
-  <script>
-    // ======= TABELAS DE EXP (YAML QUE VOCÊ MANDOU) =======
+  <!-- TEXTO DE MARKETING / AVISOS -->
+  <div class="card">
+    <h2>4) Sobre o serviço de leech Cotoco</h2>
+    <p style="font-size:13px;">
+      Somos um grupo de jogadores dedicados a oferecer o <b>melhor leech possível</b>, com foco em
+      segurança, constância e transparência. Toda a base desta calculadora foi montada usando
+      <b>dados reais do emulador</b>, somas exatas de tabela de EXP e testes práticos in-game,
+      para chegar o mais próximo possível da realidade.
+    </p>
+    <p style="font-size:13px;">
+      Ainda assim, é importante lembrar que sempre podem existir pequenas variações que a calculadora
+      não consegue prever, como:
+    </p>
+    <ul style="font-size:13px; padding-left:18px; margin-top:4px;">
+      <li>Mapa muito cheio de jogadores competindo por mob.</li>
+      <li>Buffs e debuffs específicos do mapa (aura verde, penalidades, bônus de evento etc.).</li>
+      <li>DC, lag, morte inesperada ou qualquer situação fora do padrão de farm.</li>
+    </ul>
+    <p style="font-size:13px;">
+      Por isso, os resultados aqui devem ser usados como <b>estimativa profissional</b>, e não como
+      promessa exata de minuto a minuto. Na prática, nosso objetivo é <b>entregar sempre mais do que
+      a conta mostra</b>, mantendo uma experiência de leech honesta, rápida e bem organizada.
+    </p>
+  </div>
 
-    // Índice 1 = Level 1, etc. Índice 0 fica como 0 só pra alinhar.
+  <script>
+    // ======= TABELAS DE EXP =======
+
     const expNonTrans = [
       0,
       9,16,25,36,77,112,153,200,253,320,
@@ -289,15 +408,18 @@
       34949880,40930560,55017900,71510400,106974000,146061000,174405000,343210000,99999999
     ];
 
-    // Totais 84→99 pra cada classe (somando 84 a 98)
-    const EXP_NON_84_99 = 358164738;
-    const EXP_TRANS_84_99 = 1102313643;
+    // EXP/h base por tipo de leech (sem buffs)
+    const LEECH_BASE_RATES = {
+      anolians: 14000000,
+      lava: 78000000,
+      thor_arroz: 86000000,
+      thor_lelouch: 84000000
+    };
 
     // ======= FUNÇÕES AUXILIARES =======
 
     function parseNumber(str) {
       if (!str) return NaN;
-      // tira separador de milhar (.) e aceita vírgula como decimal
       str = str.toString().trim().replace(/\./g, '').replace(',', '.');
       return parseFloat(str);
     }
@@ -306,42 +428,39 @@
       return n.toLocaleString('pt-BR');
     }
 
-	function setRefFromPreset(preset) {
-	if (preset === 'non84_99') {
-		// Leech Thor 84–99 não-trans
-		document.getElementById('refExp').value = 165000000;
-		document.getElementById('refHours').value = '1';
-		document.getElementById('refMinutes').value = '0';
-		document.getElementById('refPrice').value = '25';
-	}
-	if (preset === 'non84_99') {
-		// Leech Thor 84–99 trans
-		document.getElementById('refExp').value = 160000000;
-		document.getElementById('refHours').value = '1';
-		document.getElementById('refMinutes').value = '0';
-		document.getElementById('refPrice').value = '30';
-	}
-	
-	if (preset === 'non1_84') {
-		// Leech 1–84 não-trans (ajusta tempo/preço como você quiser)
-		document.getElementById('refExp').value = 25000000; // 1–84 não-trans
-		document.getElementById('refHours').value = '1';    // exemplo
-		document.getElementById('refMinutes').value = '0';  // exemplo
-		document.getElementById('refPrice').value = '25';   // exemplo
-	}
-	
-	if (preset === 'trans1_84') {
-		// Leech 1–84 transclasse (ajusta tempo/preço como você quiser)
-		document.getElementById('refExp').value = 150000000; // 1–84 trans
-		document.getElementById('refHours').value = '1';     // exemplo
-		document.getElementById('refMinutes').value = '0';  // exemplo
-		document.getElementById('refPrice').value = '30';   // exemplo
-	}
-	
-	// Atualiza o texto da taxa
-	updateRefInfo();
-	}
+    // soma EXP de startLevel..endLevel-1
+    function getRangeExp(expTable, startLevel, endLevel) {
+      let total = 0;
+      for (let lvl = startLevel; lvl < endLevel; lvl++) {
+        total += expTable[lvl];
+      }
+      return total;
+    }
 
+    function setRefFromPreset(preset) {
+      if (preset === 'thor_arroz') {
+        document.getElementById('refExp').value = 86000000;
+        document.getElementById('refHours').value = '1';
+        document.getElementById('refMinutes').value = '0';
+        document.getElementById('refPrice').value = '25';
+      } else if (preset === 'thor_lelouch') {
+        document.getElementById('refExp').value = 84000000;
+        document.getElementById('refHours').value = '1';
+        document.getElementById('refMinutes').value = '0';
+        document.getElementById('refPrice').value = '30';
+      } else if (preset === 'anolians_cotoco') {
+        document.getElementById('refExp').value = 14000000;
+        document.getElementById('refHours').value = '1';
+        document.getElementById('refMinutes').value = '0';
+        document.getElementById('refPrice').value = '25';
+      } else if (preset === 'lava_cotoco') {
+        document.getElementById('refExp').value = 78000000;
+        document.getElementById('refHours').value = '1';
+        document.getElementById('refMinutes').value = '0';
+        document.getElementById('refPrice').value = '30';
+      }
+      updateRefInfo();
+    }
 
     function getRefData() {
       const refExp = parseNumber(document.getElementById('refExp').value);
@@ -358,16 +477,42 @@
         return { ok: false };
       }
 
-      const expPerHour = refExp / totalRefHours;
+      const expPerHourBase = refExp / totalRefHours;
       const pricePerHour = refPrice / totalRefHours;
+
+      // buffs de EXP
+      const buffManual  = document.getElementById('buff_manual').checked;
+      const buffVisuais = document.getElementById('buff_visuais').checked;
+      const buffLata    = document.getElementById('buff_lata').checked;
+      const buffMascar  = document.getElementById('buff_mascar').checked;
+      const buffDouble  = document.getElementById('buff_double').checked;
+
+      // bônus que somam (itens)
+      let additiveBonus = 0;
+      if (buffManual)  additiveBonus += 0.5; // +50%
+      if (buffVisuais) additiveBonus += 0.2; // +20%
+      if (buffLata)    additiveBonus += 0.1; // +10%
+      if (buffMascar)  additiveBonus += 0.1; // +10%
+
+      // primeiro soma os bônus de item
+      let multiplier = 1 + additiveBonus;
+
+      // depois aplica o evento de double EXP em cima de tudo
+      if (buffDouble) {
+        multiplier *= 2; // dobra inclusive os bônus
+      }
+
+      const expPerHourFinal = expPerHourBase * multiplier;
 
       return {
         ok: true,
         refExp,
         totalRefHours,
         refPrice,
-        expPerHour,
-        pricePerHour
+        expPerHourBase,
+        expPerHourFinal,
+        pricePerHour,
+        multiplier
       };
     }
 
@@ -378,9 +523,14 @@
         infoDiv.innerHTML = '<p>Preencha EXP, tempo e preço para definir a taxa base.</p>';
         return;
       }
+
+      const bonusPercent = (data.multiplier - 1) * 100;
+
       infoDiv.innerHTML = `
         <p><b>Taxa definida:</b></p>
-        <p>• EXP/hora: <b>${formatNumber(data.expPerHour.toFixed(2))}</b></p>
+        <p>• EXP/hora base (sem buffs): <b>${formatNumber(data.expPerHourBase.toFixed(2))}</b></p>
+        <p>• Bônus de EXP: <b>${bonusPercent.toFixed(1)}%</b> (multiplicador x${data.multiplier.toFixed(2)})</p>
+        <p>• EXP/hora final (com buffs): <b>${formatNumber(data.expPerHourFinal.toFixed(2))}</b></p>
         <p>• R$/hora: <b>R$ ${data.pricePerHour.toFixed(2)}</b></p>
       `;
     }
@@ -390,22 +540,23 @@
     document.getElementById('refMinutes').addEventListener('input', updateRefInfo);
     document.getElementById('refPrice').addEventListener('input', updateRefInfo);
 
-    // ======= SIMULAÇÃO DE UP POR EXP GANHA =======
+    ['buff_manual','buff_visuais','buff_lata','buff_mascar','buff_double'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('change', updateRefInfo);
+    });
 
     function simulateLevel(expTable, startLevel, expGain) {
       let level = startLevel;
-      let expInLevel = 0; // começando com 0% no nível atual
+      let expInLevel = 0;
 
       while (expGain > 0 && level < 99) {
         const needed = expTable[level] - expInLevel;
 
         if (expGain >= needed) {
-          // Sobe de nível
           expGain -= needed;
           level += 1;
           expInLevel = 0;
         } else {
-          // Fica no mesmo nível, só aumenta a barra
           expInLevel += expGain;
           expGain = 0;
         }
@@ -454,8 +605,7 @@
         return;
       }
 
-      // EXP ganha nesse tempo
-      const expGain = refData.expPerHour * totalHours;
+      const expGain = refData.expPerHourFinal * totalHours;
       const price = refData.pricePerHour * totalHours;
 
       const expTable = classType === 'trans' ? expTrans : expNonTrans;
@@ -470,9 +620,15 @@
       `;
     }
 
-    // ======= CALCULADORA 3: 84–99 COMPLETO =======
+    // ======= CALCULADORA 3: PACOTES =======
 
-    function calculate84to99() {
+    function getLeechRateFromSelect(selectId, refData) {
+      const key = document.getElementById(selectId).value;
+      const base = LEECH_BASE_RATES[key] || refData.expPerHourBase;
+      return base * refData.multiplier;
+    }
+
+    function calculatePackages() {
       const refData = getRefData();
       const resultsDiv = document.getElementById('fullRangeResults');
 
@@ -481,34 +637,83 @@
         return;
       }
 
+      const packageType = document.getElementById('packageType').value;
       const classType = document.querySelector('input[name="classType2"]:checked').value;
-      const totalExp = classType === 'trans' ? EXP_TRANS_84_99 : EXP_NON_84_99;
+      const discountOn = document.getElementById('discount20').checked;
 
-      const totalHours = totalExp / refData.expPerHour;
+      const leechRate1 = getLeechRateFromSelect('leechRange1', refData); // 1–69
+      const leechRate2 = getLeechRateFromSelect('leechRange2', refData); // 69–84
+      const leechRate3 = getLeechRateFromSelect('leechRange3', refData); // 84–99
+
+      const table = classType === 'trans' ? expTrans : expNonTrans;
+
+      // Exp por faixa (não-trans ou trans, conforme escolha)
+      const exp1_69  = getRangeExp(table, 1, 69);  // 1..68
+      const exp69_84 = getRangeExp(table, 69, 84); // 69..83
+      const exp84_99 = getRangeExp(table, 84, 99); // 84..98
+
+      let totalExp = 0;
+      let totalHours = 0;
+      let descPacote = '';
+
+      if (packageType === '84_99') {
+        totalExp = exp84_99;
+        totalHours = exp84_99 / leechRate3;
+        descPacote = `Pacote 84 → 99 (${classType === 'trans' ? 'Transclasse' : 'Não-trans'})`;
+      } else if (packageType === '1_84') {
+        const exp1 = exp1_69;
+        const exp2 = exp69_84;
+        totalExp = exp1 + exp2;
+        totalHours = (exp1 / leechRate1) + (exp2 / leechRate2);
+        descPacote = `Pacote 1 → 84 (${classType === 'trans' ? 'Transclasse' : 'Não-trans'})`;
+      } else if (packageType === '1_70') {
+        const exp1 = getRangeExp(table, 1, 69);   // 1..68
+        const exp2 = getRangeExp(table, 69, 70);  // 69
+        totalExp = exp1 + exp2;
+        totalHours = (exp1 / leechRate1) + (exp2 / leechRate2);
+        descPacote = `Pacote 1 → 70 (${classType === 'trans' ? 'Transclasse' : 'Não-trans'})`;
+      } else if (packageType === '1_99') {
+        totalExp = exp1_69 + exp69_84 + exp84_99;
+        totalHours = (exp1_69 / leechRate1) + (exp69_84 / leechRate2) + (exp84_99 / leechRate3);
+        descPacote = `Pacote 1 → 99 (${classType === 'trans' ? 'Transclasse' : 'Não-trans'})`;
+      } else if (packageType === 'combo_1_99') {
+        // Combo: 1–99 não-trans + 1–99 trans
+        const exp1_69_non  = getRangeExp(expNonTrans, 1, 69);
+        const exp69_84_non = getRangeExp(expNonTrans, 69, 84);
+        const exp84_99_non = getRangeExp(expNonTrans, 84, 99);
+        const exp1_69_trans  = getRangeExp(expTrans, 1, 69);
+        const exp69_84_trans = getRangeExp(expTrans, 69, 84);
+        const exp84_99_trans = getRangeExp(expTrans, 84, 99);
+
+        const totalExpNon  = exp1_69_non + exp69_84_non + exp84_99_non;
+        const totalExpTrans = exp1_69_trans + exp69_84_trans + exp84_99_trans;
+
+        const hoursNon  = (exp1_69_non / leechRate1) + (exp69_84_non / leechRate2) + (exp84_99_non / leechRate3);
+        const hoursTrans = (exp1_69_trans / leechRate1) + (exp69_84_trans / leechRate2) + (exp84_99_trans / leechRate3);
+
+        totalExp = totalExpNon + totalExpTrans;
+        totalHours = hoursNon + hoursTrans;
+        descPacote = 'Combo 1 → 99 não-trans + 1 → 99 transclasse';
+      }
+
       let h = Math.floor(totalHours);
       let m = Math.round((totalHours - h) * 60);
       if (m === 60) { h += 1; m = 0; }
 
-      const price = refData.pricePerHour * totalHours;
+      const priceOriginal = refData.pricePerHour * totalHours;
+      const priceFinal = discountOn ? priceOriginal * 0.8 : priceOriginal;
 
       resultsDiv.innerHTML = `
-        <h3>Resultado 84 → 99 (${classType === 'trans' ? 'Transclasse' : 'Não-trans'})</h3>
-        <p>• EXP total necessária: <b>${formatNumber(totalExp)}</b></p>
-        <p>• Tempo estimado: <b>~ ${h}h ${m}min</b> (${totalHours.toFixed(2)} h)</p>
-        <p>• Valor proporcional sugerido: <b>R$ ${price.toFixed(2)}</b></p>
+        <h3>${descPacote}</h3>
+        <p>• EXP total necessária: <b>${formatNumber(Math.round(totalExp))}</b></p>
+        <p>• Tempo estimado com buffs atuais: <b>~ ${h}h ${m}min</b> (${totalHours.toFixed(2)} h)</p>
+        <p>• Valor proporcional: <b>R$ ${priceOriginal.toFixed(2)}</b></p>
+        ${discountOn ? `<p>• Valor com desconto de 20%: <b>R$ ${priceFinal.toFixed(2)}</b></p>` : ''}
       `;
     }
 
-    // Atualiza texto inicial
+    // Inicializa texto
     updateRefInfo();
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
