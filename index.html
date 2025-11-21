@@ -13,13 +13,14 @@
 	margin: 0;
 	padding: 20px;
 	}
-    .card {
-      background: #0f172a;
-      border-radius: 12px;
-      padding: 16px 18px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.6);
-    }
+	.card {
+	background: rgba(15, 23, 42, 0.75); /* azul escuro com ~75% opacidade */
+	border-radius: 12px;
+	padding: 16px 18px;
+	margin-bottom: 20px;
+	box-shadow: 0 4px 14px rgba(0,0,0,0.6);
+	backdrop-filter: blur(4px); /* opcional: efeito de vidro fosco */
+	}
     label {
       display: block;
       margin-top: 8px;
@@ -32,7 +33,7 @@
       padding: 7px 9px;
       border-radius: 8px;
       border: 1px solid #374151;
-      background: #020617;
+      background: rgba(2, 6, 23, 0.8); /* antes: #020617 */
       color: #e5e7eb;
       font-size: 14px;
     }
@@ -69,7 +70,7 @@
       font-size: 14px;
     }
     code {
-      background: #020617;
+      background: rgba(2, 6, 23, 0.8); /* antes: #020617 */
       padding: 2px 4px;
       border-radius: 4px;
     }
@@ -85,7 +86,7 @@
       text-align: left;
     }
     th {
-      background: #020617;
+      background: rgba(2, 6, 23, 0.8); /* antes: #020617 */
     }
     .radio-group {
       display: flex;
@@ -113,14 +114,14 @@
       padding: 10px 12px;
       border-radius: 10px;
       border: 1px solid #1f2937;
-      background: #020617;
+      background: rgba(2, 6, 23, 0.8); /* antes: #020617 */
     }
     .discount-box {
       margin-top: 10px;
       padding: 8px 10px;
       border-radius: 10px;
       border: 1px solid #1f2937;
-      background: #020617;
+      background: rgba(2, 6, 23, 0.8); /* antes: #020617 */
       max-width: 260px;
     }
     hr {
