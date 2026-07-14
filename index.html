@@ -129,9 +129,64 @@
       border-top: 1px solid #1f2937;
       margin: 16px 0;
     }
+    /* Novos Estilos */
+    .twitch-banner {
+      background: #6441a5;
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(100, 65, 165, 0.4);
+      transition: background 0.2s;
+    }
+    .twitch-banner:hover {
+      background: #7d5bbe;
+    }
+    .rate-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .rate-btn {
+      flex: 1;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      border: 2px solid #374151;
+      background: rgba(15, 23, 42, 0.8);
+      color: #e5e7eb;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .rate-btn:hover {
+      border-color: #facc15;
+      background: rgba(250, 204, 21, 0.1);
+    }
+    .rate-btn.active {
+      background: #facc15;
+      color: #111827;
+      border-color: #facc15;
+    }
   </style>
 </head>
 <body>
+
+  <!-- Link para a Twitch -->
+  <a href="https://www.twitch.tv/xsupercotoco" target="_blank" class="twitch-banner">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="display:inline-block; vertical-align:middle;">
+      <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/>
+    </svg>
+    Acompanhe ao vivo na Twitch: twitch.tv/xsupercotoco
+  </a>
+
   <h1>Calculadora de Leech - Cotoco</h1>
 
   <!-- Banner / imagem externa -->
@@ -143,11 +198,21 @@
     >
   </div>
 
+  <!-- Seleção do Rate do Personagem -->
+  <div class="card">
+    <h2 style="margin-top:0;">Escolha o Rate do Personagem</h2>
+    <div class="rate-container">
+      <button class="rate-btn active" id="btn-rate-1" onclick="setCharRate(1)">1x Rate</button>
+      <button class="rate-btn" id="btn-rate-3" onclick="setCharRate(3)">3x Rate</button>
+      <button class="rate-btn" id="btn-rate-5" onclick="setCharRate(5)">5x Rate</button>
+    </div>
+  </div>
+
   <!-- CONFIGURAÇÃO DE TAXA / PREÇO -->
   <div class="card">
     <h2>1) Configuração da taxa de EXP e preço (serviço de referência)</h2>
     <p style="font-size:13px;">
-      Aqui você define um serviço base que você já conhece (por exemplo: <b>Thor 84→99</b> em
+      Aqui você define um serviço base que você já conhece (por exemplo: <b>Anolians</b> em
       <b>1h</b> por <b>R$ 25</b>). A calculadora acha:
       <b>EXP/hora</b> e <b>R$/hora</b>, e usa isso para tudo.
     </p>
@@ -164,32 +229,10 @@
       </thead>
       <tbody>
         <tr>
-          <td>Leech Thor</td>
-          <td>Arroz</td>
-          <td>84 → 99</td>
-          <td><code>86.000.000 EXP/h</code></td>
-          <td>
-            <button class="small-btn" onclick="setRefFromPreset('thor_arroz')">
-              Usar como referência
-            </button>
-          </td>
-        </tr>
-        <tr>
-          <td>Leech Thor</td>
-          <td>Lelouch</td>
-          <td>84 → 99</td>
-          <td><code>84.000.000 EXP/h</code></td>
-          <td>
-            <button class="small-btn" onclick="setRefFromPreset('thor_lelouch')">
-              Usar como referência
-            </button>
-          </td>
-        </tr>
-        <tr>
           <td>Leech Anolians</td>
           <td>Cotoco</td>
-          <td>1 → 84 (recomendado 1–70)</td>
-          <td><code>14.000.000 EXP/h</code></td>
+          <td>42 → 99 </td>
+          <td><code>7.800.000 EXP/h</code></td>
           <td>
             <button class="small-btn" onclick="setRefFromPreset('anolians_cotoco')">
               Usar como referência
@@ -197,9 +240,9 @@
           </td>
         </tr>
         <tr>
-          <td>Leech Lago do Abismo 4</td>
+          <td>Leech Necromante(Em Breve)</td>
           <td>Cotoco</td>
-          <td>69 → 99 (recomendado 69–84)</td>
+          <td>79 → 99 </td>
           <td><code>40.000.000 EXP/h</code></td>
           <td>
             <button class="small-btn" onclick="setRefFromPreset('lava_cotoco')">
@@ -225,7 +268,7 @@
     </div>
 
     <label for="refPrice">Preço do serviço de referência (R$)</label>
-    <input id="refPrice" type="text" placeholder="Ex: 25" />
+    <input id="refPrice" type="text" placeholder="Ex: 50" />
 
     <hr>
 
@@ -236,20 +279,24 @@
 
     <div class="buff-box">
       <label class="checkbox-line">
-        <input type="checkbox" id="buff_manual">
-        Manual de combate (+50% EXP)
+        <input type="checkbox" id="buff_enciclopedia">
+        Enciclopedia de combate (+200% EXP)
       </label>
       <label class="checkbox-line">
         <input type="checkbox" id="buff_visuais">
-        Visuais de EXP (+20% EXP)
+        Visuais de EXP (+40% EXP)
       </label>
       <label class="checkbox-line">
-        <input type="checkbox" id="buff_lata">
-        Lata de ração para gatos (+10% EXP)
+        <input type="checkbox" id="buff_pet">
+        Pet Fundador (+50% EXP)
       </label>
       <label class="checkbox-line">
-        <input type="checkbox" id="buff_mascar">
-        Manual de mascar (+10% EXP)
+        <input type="checkbox" id="buff_faccao_aether">
+        Facção Aether/Tártaro (+25% EXP)
+      </label>
+      <label class="checkbox-line">
+        <input type="checkbox" id="buff_faccao_renegado">
+        Facçao Renegado (+35% EXP)
       </label>
       <label class="checkbox-line">
         <input type="checkbox" id="buff_double">
@@ -300,7 +347,7 @@
     <p style="font-size:13px;">
       Aqui você monta um pacote fechado. A EXP é dividida em três faixas:
       <b>1–69</b>, <b>69–84</b> e <b>84–99</b>, e você escolhe qual tipo de leech será usado em cada uma.
-      Thor só aparece na faixa 84–99 e Lago do Abismo só a partir do 69, respeitando as restrições de nível.
+      Lago do Abismo só a partir do 69, respeitando as restrições de nível.
       O combo inclui <b>1→99 não-trans + 1→99 transclasse</b>.
     </p>
 
@@ -330,8 +377,7 @@
       <div>
         <label for="leechRange3">Leech para 84 → 99</label>
         <select id="leechRange3">
-          <option value="thor_arroz">Thor (Arroz)</option>
-          <option value="thor_lelouch">Thor (Lelouch)</option>
+          <option value="lava">Lago do Abismo 4 (Cotoco)</option>
         </select>
       </div>
     </div>
@@ -409,12 +455,13 @@
       34949880,40930560,55017900,71510400,106974000,146061000,174405000,343210000,99999999
     ];
 
+    // Global Character Rate Multiplier
+    let globalCharacterRate = 1;
+
     // EXP/h base por tipo de leech (sem buffs)
     const LEECH_BASE_RATES = {
-      anolians: 14000000,
-      lava: 31000000,
-      thor_arroz: 86000000,
-      thor_lelouch: 84000000
+      anolians: 7800000,
+      lava: 31000000
     };
 
     // ======= FUNÇÕES AUXILIARES =======
@@ -438,22 +485,21 @@
       return total;
     }
 
+    function setCharRate(rate) {
+      globalCharacterRate = rate;
+      document.querySelectorAll('.rate-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(`btn-rate-${rate}`).classList.add('active');
+      updateRefInfo();
+      calculateLevelByTime();
+      calculatePackages();
+    }
+
     function setRefFromPreset(preset) {
-      if (preset === 'thor_arroz') {
-        document.getElementById('refExp').value = 86000000;
-        document.getElementById('refHours').value = '1';
-        document.getElementById('refMinutes').value = '0';
-        document.getElementById('refPrice').value = '25';
-      } else if (preset === 'thor_lelouch') {
-        document.getElementById('refExp').value = 84000000;
+      if (preset === 'anolians_cotoco') {
+        document.getElementById('refExp').value = 7800000;
         document.getElementById('refHours').value = '1';
         document.getElementById('refMinutes').value = '0';
         document.getElementById('refPrice').value = '30';
-      } else if (preset === 'anolians_cotoco') {
-        document.getElementById('refExp').value = 14000000;
-        document.getElementById('refHours').value = '1';
-        document.getElementById('refMinutes').value = '0';
-        document.getElementById('refPrice').value = '25';
       } else if (preset === 'lava_cotoco') {
         document.getElementById('refExp').value = 40000000;
         document.getElementById('refHours').value = '1';
@@ -478,22 +524,25 @@
         return { ok: false };
       }
 
-      const expPerHourBase = refExp / totalRefHours;
+      // Apply character rate to base exp
+      const expPerHourBase = (refExp / totalRefHours) * globalCharacterRate;
       const pricePerHour = refPrice / totalRefHours;
 
       // buffs de EXP
-      const buffManual  = document.getElementById('buff_manual').checked;
-      const buffVisuais = document.getElementById('buff_visuais').checked;
-      const buffLata    = document.getElementById('buff_lata').checked;
-      const buffMascar  = document.getElementById('buff_mascar').checked;
-      const buffDouble  = document.getElementById('buff_double').checked;
+      const buffEnciclopedia = document.getElementById('buff_enciclopedia').checked;
+      const buffVisuais      = document.getElementById('buff_visuais').checked;
+      const buffPet          = document.getElementById('buff_pet').checked;
+      const buffFaccaoAether = document.getElementById('buff_faccao_aether').checked;
+      const buffFaccaoReneg  = document.getElementById('buff_faccao_renegado').checked;
+      const buffDouble       = document.getElementById('buff_double').checked;
 
       // bônus que somam (itens)
       let additiveBonus = 0;
-      if (buffManual)  additiveBonus += 0.5; // +50%
-      if (buffVisuais) additiveBonus += 0.2; // +20%
-      if (buffLata)    additiveBonus += 0.1; // +10%
-      if (buffMascar)  additiveBonus += 0.1; // +10%
+      if (buffEnciclopedia) additiveBonus += 2.0; // +200%
+      if (buffVisuais)      additiveBonus += 0.4; // +40%
+      if (buffPet)          additiveBonus += 0.5; // +50%
+      if (buffFaccaoAether) additiveBonus += 0.25; // +25%
+      if (buffFaccaoReneg)  additiveBonus += 0.35; // +35%
 
       // primeiro soma os bônus de item
       let multiplier = 1 + additiveBonus;
@@ -507,7 +556,7 @@
 
       return {
         ok: true,
-        refExp,
+        refExp: refExp * globalCharacterRate,
         totalRefHours,
         refPrice,
         expPerHourBase,
@@ -529,9 +578,10 @@
 
       infoDiv.innerHTML = `
         <p><b>Taxa definida:</b></p>
-        <p>• EXP/hora base (sem buffs): <b>${formatNumber(data.expPerHourBase.toFixed(2))}</b></p>
+        <p>• Multiplicador de Rate: <b>${globalCharacterRate}x</b></p>
+        <p>• EXP/hora base (sem buffs, com rate): <b>${formatNumber(data.expPerHourBase.toFixed(2))}</b></p>
         <p>• Bônus de EXP: <b>${bonusPercent.toFixed(1)}%</b> (multiplicador x${data.multiplier.toFixed(2)})</p>
-        <p>• EXP/hora final (com buffs): <b>${formatNumber(data.expPerHourFinal.toFixed(2))}</b></p>
+        <p>• EXP/hora final (com buffs e rate): <b>${formatNumber(data.expPerHourFinal.toFixed(2))}</b></p>
         <p>• R$/hora: <b>R$ ${data.pricePerHour.toFixed(2)}</b></p>
       `;
     }
@@ -541,7 +591,7 @@
     document.getElementById('refMinutes').addEventListener('input', updateRefInfo);
     document.getElementById('refPrice').addEventListener('input', updateRefInfo);
 
-    ['buff_manual','buff_visuais','buff_lata','buff_mascar','buff_double'].forEach(id => {
+    ['buff_enciclopedia','buff_visuais','buff_pet','buff_faccao_aether','buff_faccao_renegado','buff_double'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.addEventListener('change', updateRefInfo);
     });
@@ -625,8 +675,8 @@
 
     function getLeechRateFromSelect(selectId, refData) {
       const key = document.getElementById(selectId).value;
-      const base = LEECH_BASE_RATES[key] || refData.expPerHourBase;
-      return base * refData.multiplier;
+      const base = LEECH_BASE_RATES[key] || (refData.expPerHourBase / globalCharacterRate);
+      return base * globalCharacterRate * refData.multiplier;
     }
 
     function calculatePackages() {
@@ -718,7 +768,3 @@
   </script>
 </body>
 </html>
-
-
-
-
