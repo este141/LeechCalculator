@@ -129,13 +129,12 @@
       border-top: 1px solid #1f2937;
       margin: 16px 0;
     }
-    /* Novos Estilos */
+    /* Novos Estilos e Botão Twitch Flutuante no Topo */
     .twitch-banner {
       background: #6441a5;
       color: #fff;
       padding: 12px 18px;
       border-radius: 12px;
-      margin-bottom: 20px;
       text-align: center;
       font-weight: bold;
       display: flex;
@@ -143,11 +142,33 @@
       justify-content: center;
       gap: 10px;
       text-decoration: none;
-      box-shadow: 0 4px 14px rgba(100, 65, 165, 0.4);
-      transition: background 0.2s;
+      box-shadow: 0 4px 14px rgba(100, 65, 165, 0.6);
+      transition: background 0.2s, transform 0.2s;
+      
+      /* Posicionamento fixo que desce com o scroll mantendo-se sempre visível no topo da tela */
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      z-index: 9999;
+      max-width: 320px;
     }
     .twitch-banner:hover {
       background: #7d5bbe;
+      transform: translateY(-2px);
+    }
+    /* Espaçamento no topo do body para não ficar atrás do botão flutuante em telas menores */
+    body {
+      padding-top: 70px;
+    }
+    @media (max-width: 600px) {
+      .twitch-banner {
+        position: static;
+        max-width: 100%;
+        margin-bottom: 20px;
+      }
+      body {
+        padding-top: 20px;
+      }
     }
     .rate-container {
       display: flex;
@@ -179,12 +200,12 @@
 </head>
 <body>
 
-  <!-- Link para a Twitch -->
+  <!-- Link Flutuante para a Twitch que acompanha o scroll no topo -->
   <a href="https://www.twitch.tv/xsupercotoco" target="_blank" class="twitch-banner">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="display:inline-block; vertical-align:middle;">
       <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/>
     </svg>
-    Acompanhe ao vivo na Twitch: twitch.tv/xsupercotoco
+    Live: twitch.tv/xsupercotoco
   </a>
 
   <h1>Calculadora de Leech - Cotoco</h1>
@@ -341,67 +362,9 @@
     <div class="results" id="levelResults"></div>
   </div>
 
-  <!-- CALCULADORA DE PACOTES -->
-  <div class="card">
-    <h2>3) Calculadora de pacotes (1–84, 1–70, 1–99, 84–99 e combo)</h2>
-    <p style="font-size:13px;">
-      Aqui você monta um pacote fechado. A EXP é dividida em três faixas:
-      <b>1–69</b>, <b>69–84</b> e <b>84–99</b>, e você escolhe qual tipo de leech será usado em cada uma.
-      Lago do Abismo só a partir do 69, respeitando as restrições de nível.
-      O combo inclui <b>1→99 não-trans + 1→99 transclasse</b>.
-    </p>
-
-    <label for="packageType">Tipo de pacote</label>
-    <select id="packageType">
-      <option value="84_99">84 → 99</option>
-      <option value="1_84">1 → 84</option>
-      <option value="1_70">1 → 70</option>
-      <option value="1_99">1 → 99</option>
-      <option value="combo_1_99">Combo 1 → 99 não-trans + 1 → 99 transclasse</option>
-    </select>
-
-    <div class="row" style="margin-top:10px;">
-      <div>
-        <label for="leechRange1">Leech para 1 → 69</label>
-        <select id="leechRange1">
-          <option value="anolians">Anolians (Cotoco)</option>
-        </select>
-      </div>
-      <div>
-        <label for="leechRange2">Leech para 69 → 84</label>
-        <select id="leechRange2">
-          <option value="anolians">Anolians (Cotoco)</option>
-          <option value="lava">Lago do Abismo 4 (Cotoco)</option>
-        </select>
-      </div>
-      <div>
-        <label for="leechRange3">Leech para 84 → 99</label>
-        <select id="leechRange3">
-          <option value="lava">Lago do Abismo 4 (Cotoco)</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="radio-group" style="margin-top:8px;">
-      <label><input type="radio" name="classType2" value="non" checked> Não-transclasse</label>
-      <label><input type="radio" name="classType2" value="trans"> Transclasse</label>
-    </div>
-
-    <div class="discount-box">
-      <label class="checkbox-line" style="margin-top:0;">
-        <input type="checkbox" id="discount20">
-        Aplicar desconto de 20% (pacotes)
-      </label>
-    </div>
-
-    <button onclick="calculatePackages()">Calcular pacote</button>
-
-    <div class="results" id="fullRangeResults"></div>
-  </div>
-
   <!-- TEXTO DE MARKETING / AVISOS -->
   <div class="card">
-    <h2>4) Sobre o serviço de leech Cotoco</h2>
+    <h2>3) Sobre o serviço de leech Cotoco</h2>
     <p style="font-size:13px;">
       Somos um grupo de jogadores dedicados a oferecer o <b>melhor leech possível</b>, com foco em
       segurança, constância e transparência. Toda a base desta calculadora foi montada usando
@@ -458,16 +421,10 @@
     // Global Character Rate Multiplier
     let globalCharacterRate = 1;
 
-    // EXP/h base por tipo de leech (sem buffs)
-    const LEECH_BASE_RATES = {
-      anolians: 7800000,
-      lava: 31000000
-    };
-
     // ======= FUNÇÕES AUXILIARES =======
 
     function parseNumber(str) {
-      if (!str) return NaN;
+      if (str === null || str === undefined || str.toString().trim() === '') return NaN;
       str = str.toString().trim().replace(/\./g, '').replace(',', '.');
       return parseFloat(str);
     }
@@ -476,22 +433,12 @@
       return n.toLocaleString('pt-BR');
     }
 
-    // soma EXP de startLevel..endLevel-1
-    function getRangeExp(expTable, startLevel, endLevel) {
-      let total = 0;
-      for (let lvl = startLevel; lvl < endLevel; lvl++) {
-        total += expTable[lvl];
-      }
-      return total;
-    }
-
     function setCharRate(rate) {
       globalCharacterRate = rate;
       document.querySelectorAll('.rate-btn').forEach(btn => btn.classList.remove('active'));
       document.getElementById(`btn-rate-${rate}`).classList.add('active');
       updateRefInfo();
       calculateLevelByTime();
-      calculatePackages();
     }
 
     function setRefFromPreset(preset) {
@@ -638,15 +585,25 @@
 
       const classType = document.querySelector('input[name="classType1"]:checked').value;
       const startLevel = parseInt(document.getElementById('startLevel').value, 10);
-      const leechHours = parseNumber(document.getElementById('leechHours').value);
-      const leechMinutes = parseNumber(document.getElementById('leechMinutes').value);
+      
+      // Auto preenchimento caso horas ou minutos estejam vazios ou inválidos
+      let hoursInput = document.getElementById('leechHours').value.trim();
+      let minutesInput = document.getElementById('leechMinutes').value.trim();
+
+      if (hoursInput === "") {
+        document.getElementById('leechHours').value = "0";
+        hoursInput = "0";
+      }
+      if (minutesInput === "") {
+        document.getElementById('leechMinutes').value = "0";
+        minutesInput = "0";
+      }
+
+      const leechHours = parseNumber(hoursInput);
+      const leechMinutes = parseNumber(minutesInput);
 
       if (isNaN(startLevel) || startLevel < 1 || startLevel > 99) {
         resultsDiv.innerHTML = '<p style="color:#fca5a5;">Informe um nível inicial entre 1 e 99.</p>';
-        return;
-      }
-      if (isNaN(leechHours) || isNaN(leechMinutes)) {
-        resultsDiv.innerHTML = '<p style="color:#fca5a5;">Informe o tempo de leech (horas e minutos).</p>';
         return;
       }
 
@@ -668,98 +625,6 @@
         <p>• Nível estimado final: <b>${sim.level}</b></p>
         <p>• Barra no nível ${sim.level}: <b>${sim.percent.toFixed(1)}%</b></p>
         <p>• Valor sugerido para esse leech: <b>R$ ${price.toFixed(2)}</b></p>
-      `;
-    }
-
-    // ======= CALCULADORA 3: PACOTES =======
-
-    function getLeechRateFromSelect(selectId, refData) {
-      const key = document.getElementById(selectId).value;
-      const base = LEECH_BASE_RATES[key] || (refData.expPerHourBase / globalCharacterRate);
-      return base * globalCharacterRate * refData.multiplier;
-    }
-
-    function calculatePackages() {
-      const refData = getRefData();
-      const resultsDiv = document.getElementById('fullRangeResults');
-
-      if (!refData.ok) {
-        resultsDiv.innerHTML = '<p style="color:#fca5a5;">Primeiro configure o serviço de referência na seção 1.</p>';
-        return;
-      }
-
-      const packageType = document.getElementById('packageType').value;
-      const classType = document.querySelector('input[name="classType2"]:checked').value;
-      const discountOn = document.getElementById('discount20').checked;
-
-      const leechRate1 = getLeechRateFromSelect('leechRange1', refData); // 1–69
-      const leechRate2 = getLeechRateFromSelect('leechRange2', refData); // 69–84
-      const leechRate3 = getLeechRateFromSelect('leechRange3', refData); // 84–99
-
-      const table = classType === 'trans' ? expTrans : expNonTrans;
-
-      // Exp por faixa (não-trans ou trans, conforme escolha)
-      const exp1_69  = getRangeExp(table, 1, 69);  // 1..68
-      const exp69_84 = getRangeExp(table, 69, 84); // 69..83
-      const exp84_99 = getRangeExp(table, 84, 99); // 84..98
-
-      let totalExp = 0;
-      let totalHours = 0;
-      let descPacote = '';
-
-      if (packageType === '84_99') {
-        totalExp = exp84_99;
-        totalHours = exp84_99 / leechRate3;
-        descPacote = `Pacote 84 → 99 (${classType === 'trans' ? 'Transclasse' : 'Não-trans'})`;
-      } else if (packageType === '1_84') {
-        const exp1 = exp1_69;
-        const exp2 = exp69_84;
-        totalExp = exp1 + exp2;
-        totalHours = (exp1 / leechRate1) + (exp2 / leechRate2);
-        descPacote = `Pacote 1 → 84 (${classType === 'trans' ? 'Transclasse' : 'Não-trans'})`;
-      } else if (packageType === '1_70') {
-        const exp1 = getRangeExp(table, 1, 69);   // 1..68
-        const exp2 = getRangeExp(table, 69, 70);  // 69
-        totalExp = exp1 + exp2;
-        totalHours = (exp1 / leechRate1) + (exp2 / leechRate2);
-        descPacote = `Pacote 1 → 70 (${classType === 'trans' ? 'Transclasse' : 'Não-trans'})`;
-      } else if (packageType === '1_99') {
-        totalExp = exp1_69 + exp69_84 + exp84_99;
-        totalHours = (exp1_69 / leechRate1) + (exp69_84 / leechRate2) + (exp84_99 / leechRate3);
-        descPacote = `Pacote 1 → 99 (${classType === 'trans' ? 'Transclasse' : 'Não-trans'})`;
-      } else if (packageType === 'combo_1_99') {
-        // Combo: 1–99 não-trans + 1–99 trans
-        const exp1_69_non  = getRangeExp(expNonTrans, 1, 69);
-        const exp69_84_non = getRangeExp(expNonTrans, 69, 84);
-        const exp84_99_non = getRangeExp(expNonTrans, 84, 99);
-        const exp1_69_trans  = getRangeExp(expTrans, 1, 69);
-        const exp69_84_trans = getRangeExp(expTrans, 69, 84);
-        const exp84_99_trans = getRangeExp(expTrans, 84, 99);
-
-        const totalExpNon  = exp1_69_non + exp69_84_non + exp84_99_non;
-        const totalExpTrans = exp1_69_trans + exp69_84_trans + exp84_99_trans;
-
-        const hoursNon  = (exp1_69_non / leechRate1) + (exp69_84_non / leechRate2) + (exp84_99_non / leechRate3);
-        const hoursTrans = (exp1_69_trans / leechRate1) + (exp69_84_trans / leechRate2) + (exp84_99_trans / leechRate3);
-
-        totalExp = totalExpNon + totalExpTrans;
-        totalHours = hoursNon + hoursTrans;
-        descPacote = 'Combo 1 → 99 não-trans + 1 → 99 transclasse';
-      }
-
-      let h = Math.floor(totalHours);
-      let m = Math.round((totalHours - h) * 60);
-      if (m === 60) { h += 1; m = 0; }
-
-      const priceOriginal = refData.pricePerHour * totalHours;
-      const priceFinal = discountOn ? priceOriginal * 0.8 : priceOriginal;
-
-      resultsDiv.innerHTML = `
-        <h3>${descPacote}</h3>
-        <p>• EXP total necessária: <b>${formatNumber(Math.round(totalExp))}</b></p>
-        <p>• Tempo estimado com buffs atuais: <b>~ ${h}h ${m}min</b> (${totalHours.toFixed(2)} h)</p>
-        <p>• Valor proporcional: <b>R$ ${priceOriginal.toFixed(2)}</b></p>
-        ${discountOn ? `<p>• Valor com desconto de 20%: <b>R$ ${priceFinal.toFixed(2)}</b></p>` : ''}
       `;
     }
 
